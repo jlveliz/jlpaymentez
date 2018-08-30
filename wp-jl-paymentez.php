@@ -246,7 +246,7 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
 			/**
 				verify is in env mode
 			**/
-			public function is_env_mode()
+			public function is_dev_mode()
 			{
 				return $this->env_mode == 'yes' ? true : false;
 			}
@@ -551,7 +551,7 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
 				
 				$paramsRefound = "/v2/transaction/refund/";
 
-				$urlPost = $this->is_env_mode() ?  $this->api_url_development.$paramsRefound : $this->api_url_production.$paramsRefound;
+				$urlPost = $this->is_dev_mode() ?  $this->api_url_development.$paramsRefound : $this->api_url_production.$paramsRefound;
 
 
 				$transactionId = get_post_meta( $order->get_id(), '_'.$this->get_id().'_transaction_id', true );
