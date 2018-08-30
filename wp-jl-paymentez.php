@@ -508,8 +508,8 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
 
 
 			private function generate_token() {
-				$appCode = "GOBE-EC-SERVER"; //$this->get_client_app_code();  
-				$appKey =  "J4qCXk19FWCnoyrdMihGFKl66bxhw7"; //$this->get_client_app_key(); 
+				$appCode = $this->get_client_app_code();  
+				$appKey =   $this->get_client_app_key(); 
 				$unix_timestamp = time();
 				$uniq_token_string = $appKey.(string)($unix_timestamp);
 				$uniq_token_hash = hash("sha256", $uniq_token_string);
