@@ -54,10 +54,5 @@ Para pagos solo en Ecuador
 #### IVA
 Porcentaje del Iva (mejoras próximamente)
 
-
-
-
-
-
-
-
+# ScreenShot
+![screen1](https://thejlmedia.com/wp-content/uploads/2018/08/paymentez7.png)
