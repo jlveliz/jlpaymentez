@@ -1,6 +1,6 @@
-#Instalación
+# Instalación
 
-##Requisitos
+## Requisitos
 
 - Wordpress V. 4.9.*
 - Woocommerce V. 3.4.*
@@ -20,40 +20,39 @@ Ir al menú `Woocommerce > Ajustes` e ir a la pestaña de pagos
 ![Paso 3] (https://thejlmedia.com/wp-content/uploads/2018/08/paymentez3.png)
 ![Paso 3.1] (https://thejlmedia.com/wp-content/uploads/2018/08/paymentez4.png)
 
-##Paso 4
+## Paso 4
 Activar el modo de Pago `JL Paymentez`
 ![Paso 4] (https://thejlmedia.com/wp-content/uploads/2018/08/paymentez5.png)
 
-##Paso 5
+## Paso 5
 Presionar sobre el botón Gestionar para llenar los datos de configuración
 ![Paso 5] (https://thejlmedia.com/wp-content/uploads/2018/08/paymentez6.png)
 
-#Configuración
+# Configuración
 
-####Enable/Desabled 
+#### Enable/Desabled 
 Permite Activar o desactivar el método de pago
 
-####Development Mode
+#### Development Mode
 Si está en modo de desarrollo o producción  
 
-####Title
+#### Title
 La forma en que se presentará en la pantalla de `Checkout`
 
-####Paymentez Client App Code
+#### Paymentez Client App Code
 Código provisto por Paymentez
 
-####Paymentez Client App Key
+#### Paymentez Client App Key
 Código provisto por Paymentez
 
-####Language
+#### Language
 Lenguaje en que se presentará el dialogo de pago al usuario 
 
-####Pay in Equador
+#### Pay in Equador
 Para pagos solo en Ecuador
 
-####IVA
+#### IVA
 Porcentaje del Iva (mejoras próximamente)
-
 
 
 
