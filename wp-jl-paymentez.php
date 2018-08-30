@@ -167,7 +167,7 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
 				$this->language = $this->get_option( 'language' );
 				$this->paymentez_client_app_code = $this->get_option('paymentez_client_app_code');
 				$this->paymentez_client_app_key = $this->get_option('paymentez_client_app_key');
-				$this->paymentez_client_app_refund = $this->get_option('paymentez_client_app_refund');
+				// $this->paymentez_client_app_refund = $this->get_option('paymentez_client_app_refund');
 				$this->env_mode = $this->get_option( 'env_mode' );
 				$this->ecuadorian_app = $this->get_option( 'ecuadorian_app' );
 				$this->iva_percentage = $this->get_option( 'iva_percentage' );
@@ -237,10 +237,10 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
 				get paymentez_client_app_key inserted by user
 			**/
 
-			public function get_client_app_refund()
-			{
-				return $this->paymentez_client_app_refund;
-			}
+			// public function get_client_app_refund()
+			// {
+			// 	return $this->paymentez_client_app_refund;
+			// }
 
 
 			/**
@@ -300,13 +300,13 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
 				       		'default' => 'Your Paymentez Client App Key',
 				       		'desc_tip'    => true,
 				       ],
-				       'paymentez_client_app_refund' => [
-				       		'title' => __('Paymentez Refund Key','jl-paymentez'),
-				       		'type' => 'text',
-				       		'description' => 'Provided by Paymentez',
-				       		'default' => 'Your Paymentez Refund',
-				       		'desc_tip'    => true,
-				       ],
+				       // 'paymentez_client_app_refund' => [
+				       // 		'title' => __('Paymentez Refund Key','jl-paymentez'),
+				       // 		'type' => 'text',
+				       // 		'description' => 'Provided by Paymentez',
+				       // 		'default' => 'Your Paymentez Refund',
+				       // 		'desc_tip'    => true,
+				       // ],
 
 				       'language' => [
 				       		'title' => 'Language',
@@ -533,15 +533,15 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
 				return $auth_token;
 			}
 
-			private function generate_token_refund() {
-				$appCode = $this->get_client_app_code();  
-				$appKey =   $this->get_client_app_refund(); 
-				$unix_timestamp = time();
-				$uniq_token_string = $appKey.(string)($unix_timestamp);
-				$uniq_token_hash = hash("sha256", $uniq_token_string);
-				$auth_token = base64_encode($appCode.';'.(string)$unix_timestamp.';'.$uniq_token_hash);
-				return $auth_token;
-			}
+			// private function generate_token_refund() {
+			// 	$appCode = $this->get_client_app_code();  
+			// 	$appKey =   $this->get_client_app_refund(); 
+			// 	$unix_timestamp = time();
+			// 	$uniq_token_string = $appKey.(string)($unix_timestamp);
+			// 	$uniq_token_hash = hash("sha256", $uniq_token_string);
+			// 	$auth_token = base64_encode($appCode.';'.(string)$unix_timestamp.';'.$uniq_token_hash);
+			// 	return $auth_token;
+			// }
 
 
 			//refund
@@ -569,7 +569,7 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
 				curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
 				curl_setopt($ch, CURLOPT_HTTPHEADER, [
 					"Content-Type:application/json",
-					"Auth-Token:".$this->generate_token_refund()
+					"Auth-Token:".$this->generate_token()
 				]);
 				
 				$payload = json_encode($data);
