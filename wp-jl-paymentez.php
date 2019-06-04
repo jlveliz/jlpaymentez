@@ -167,7 +167,6 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
 				$this->language = $this->get_option( 'language' );
 				$this->paymentez_client_app_code = $this->get_option('paymentez_client_app_code');
 				$this->paymentez_client_app_key = $this->get_option('paymentez_client_app_key');
-				// $this->paymentez_client_app_refund = $this->get_option('paymentez_client_app_refund');
 				$this->env_mode = $this->get_option( 'env_mode' );
 				$this->ecuadorian_app = $this->get_option( 'ecuadorian_app' );
 				$this->iva_percentage = $this->get_option( 'iva_percentage' );
@@ -233,20 +232,11 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
 				return $this->paymentez_client_app_key;
 			}
 
-			/**	
-				get paymentez_client_app_key inserted by user
-			**/
-
-			// public function get_client_app_refund()
-			// {
-			// 	return $this->paymentez_client_app_refund;
-			// }
-
 
 			/**
 				verify is in env mode
 			**/
-			public function is_dev_mode()
+			public function is_env_mode()
 			{
 				return $this->env_mode == 'yes' ? true : false;
 			}
@@ -293,6 +283,7 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
 				       		'default' => 'Your Paymentez Client App Code',
 				       		'desc_tip'    => true,
 				       ],
+
 				       'paymentez_client_app_key' => [
 				       		'title' => __('Paymentez Client App Key','jl-paymentez'),
 				       		'type' => 'text',
@@ -300,13 +291,6 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
 				       		'default' => 'Your Paymentez Client App Key',
 				       		'desc_tip'    => true,
 				       ],
-				       // 'paymentez_client_app_refund' => [
-				       // 		'title' => __('Paymentez Refund Key','jl-paymentez'),
-				       // 		'type' => 'text',
-				       // 		'description' => 'Provided by Paymentez',
-				       // 		'default' => 'Your Paymentez Refund',
-				       // 		'desc_tip'    => true,
-				       // ],
 
 				       'language' => [
 				       		'title' => 'Language',
@@ -368,9 +352,8 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
 				$location = plugins_url('/includes/success.php?order_id='.$order_id, __FILE__);
 				$inEquador = $this->ecuadorian_app == 'yes' ? true : false;
 				$tax_percentage = $this->iva_percentage;
-				$order_vat = number_format(($order->get_total_tax()),2,'.','');
-				$order->get_total_tax() ?    $order_taxable_amount = ($total - $order_vat)  :  $order_taxable_amount = 0;
-
+				$order_vat = ($total * $tax_percentage) / 100;
+				$order_taxable_amount = number_format(($total - $order_vat),2,'.','');
 
 				
 				return "
@@ -451,7 +434,6 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
 						        $('#pay-with-paymentez').css('display','block');
 						      },
 						      onResponse: function(response) {
-						      	debugger;
 						      	if(response.error) {
 						      		$('#message-response').addClass('paymentez-error').text(response.error.description)
 						      	} else if(response.transaction)  {
@@ -524,24 +506,14 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
 
 
 			private function generate_token() {
-				$appCode = $this->get_client_app_code();  
-				$appKey =   $this->get_client_app_key(); 
+				$appCode = "GOBE-EC-SERVER"; //$this->get_client_app_code();  
+				$appKey =  "J4qCXk19FWCnoyrdMihGFKl66bxhw7"; //$this->get_client_app_key(); 
 				$unix_timestamp = time();
 				$uniq_token_string = $appKey.(string)($unix_timestamp);
 				$uniq_token_hash = hash("sha256", $uniq_token_string);
 				$auth_token = base64_encode($appCode.';'.(string)$unix_timestamp.';'.$uniq_token_hash);
 				return $auth_token;
 			}
-
-			// private function generate_token_refund() {
-			// 	$appCode = $this->get_client_app_code();  
-			// 	$appKey =   $this->get_client_app_refund(); 
-			// 	$unix_timestamp = time();
-			// 	$uniq_token_string = $appKey.(string)($unix_timestamp);
-			// 	$uniq_token_hash = hash("sha256", $uniq_token_string);
-			// 	$auth_token = base64_encode($appCode.';'.(string)$unix_timestamp.';'.$uniq_token_hash);
-			// 	return $auth_token;
-			// }
 
 
 			//refund
@@ -551,7 +523,7 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
 				
 				$paramsRefound = "/v2/transaction/refund/";
 
-				$urlPost = $this->is_dev_mode() ?  $this->api_url_development.$paramsRefound : $this->api_url_production.$paramsRefound;
+				$urlPost = $this->is_env_mode() ?  $this->api_url_development.$paramsRefound : $this->api_url_production.$paramsRefound;
 
 
 				$transactionId = get_post_meta( $order->get_id(), '_'.$this->get_id().'_transaction_id', true );
