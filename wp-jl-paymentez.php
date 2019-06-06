@@ -171,6 +171,7 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
 				$this->ecuadorian_app = $this->get_option( 'ecuadorian_app' );
 				$this->iva_percentage = $this->get_option( 'iva_percentage' );
 				$this->enabled = $this->get_option( 'enabled' );
+				$this->order_installments_type = $this->get_option('installments');
 				
 
 				add_action('init', array(&$this, 'check_paymentez_response'));
@@ -239,6 +240,15 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
 			public function is_env_mode()
 			{
 				return $this->env_mode == 'yes' ? true : false;
+			}
+
+
+			/*
+				verify if installments_mode
+			*/
+			public function get_order_installments_type()
+			{
+				return $this->order_installments_type;
 			}
 
 
@@ -311,13 +321,23 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
 				       		'default' => false,
 				       		'desc_tip'    => true,
 				       ],
+				       'installments' =>  [
+				       		'title' => 'Cuotas',
+				       		'type'=> 'select',
+				       		'description'=>"Do you want to pay in installments?",
+				       		'options' => [
+				       			'0' => 'No',
+				       			'2' => 'Yes',
+				       		],
+				       		'default' => '0'
+				       ],
 				       'iva_percentage' => [
 				       		'title' => 'IVA %',
 				       		'id' => 'iva_percentage_paymentez',
 				       		'type' => 'text',
 				       		'description' => __( 'Tax used on Equador', 'jl-paymentez' ),
 				       		'default' => '12',
-				       ] 
+				       ]
 				   ];
 			}
 
@@ -344,6 +364,7 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
 				$email = $order->get_billing_email();
 				$phone = $order->get_billing_phone();
 				$total = $order->get_total();
+				$order_installments_type = $this->get_order_installments_type();
 				$order_description = $this->get_description_orders($order->get_items( 'line_item' ));
 				$env_mode = $this->env_mode == 'yes' ? 'stg' : 'prod';
 				$lang = $this->language;
@@ -352,7 +373,7 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
 				$location = plugins_url('/includes/success.php?order_id='.$order_id, __FILE__);
 				$inEquador = $this->ecuadorian_app == 'yes' ? true : false;
 				$tax_percentage = $this->iva_percentage;
-				$order_vat = ($total * $tax_percentage) / 100;
+				$order_vat = number_format(($total * $tax_percentage) / 100,2,'.','');
 				$order_taxable_amount = number_format(($total - $order_vat),2,'.','');
 
 				
@@ -401,7 +422,7 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
 
 						if($inEquador) {
 							paramOpen.order_tax_percentage = $tax_percentage;
-							// paramOpen.order_installments_type = 0;
+							paramOpen.order_installments_type = $order_installments_type;
 							paramOpen.order_taxable_amount = $order_taxable_amount;
 						}
 
