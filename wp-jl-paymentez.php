@@ -76,7 +76,7 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
 		<?php 
 			}
 		}
-		add_filter('woocommerce_email_order_meta','jl_woocommerce_custom_email_order_meta_fields');
+		do_action('woocommerce_email_order_meta_fields','jl_woocommerce_custom_email_order_meta_fields');
 
 		
 		
@@ -373,8 +373,8 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
 				$location = plugins_url('/includes/success.php?order_id='.$order_id, __FILE__);
 				$inEquador = $this->ecuadorian_app == 'yes' ? true : false;
 				$tax_percentage = $this->iva_percentage;
-				$order_vat = number_format(($total * $tax_percentage) / 100,2,'.','');
-				$order_taxable_amount = number_format(($total - $order_vat),2,'.','');
+				$order_taxable_amount = number_format(($total / ("1.".$tax_percentage)),2,'.','');
+				$order_vat =  number_format(($total - $order_taxable_amount),2,'.','');
 
 				
 				return "

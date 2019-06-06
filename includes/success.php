@@ -13,10 +13,21 @@
 		$order_id = $_GET['order_id'];
 		$transaction_id = $_GET['transaction_id'];
 		$order = new WC_Order($order_id);
-        $order->update_status('completed');
+
+		
+		$hasDownloadableItems = $order->has_downloadable_item();
+
+		if ($hasDownloadableItems) {
+        	$order->update_status('completed');
+	        // Reduce stock levels
+	    	$order->reduce_order_stock();
+		} else {
+			$order->update_status('processing');
+		}
+
+
+
         $order->add_order_note($jlPaymentez->translate("success").' - ' .$jlPaymentez->translate('code') .' '. $transaction_id);
-        // Reduce stock levels
-    	$order->reduce_order_stock();
 
     	// Mark order as Paid
 		$order->payment_complete();
