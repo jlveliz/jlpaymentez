@@ -76,7 +76,7 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
 		<?php 
 			}
 		}
-		do_action('woocommerce_email_order_meta_fields','jl_woocommerce_custom_email_order_meta_fields');
+		add_filter('woocommerce_email_order_meta_fields','jl_woocommerce_custom_email_order_meta_fields');
 
 		
 		
