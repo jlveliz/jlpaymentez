@@ -15,15 +15,21 @@
 		$order = new WC_Order($order_id);
 
 		
-		$hasDownloadableItems = $order->has_downloadable_item();
+		// $hasDownloadableItems = $order->has_downloadable_item();
 
-		if ($hasDownloadableItems) {
-        	$order->update_status('completed');
-	        // Reduce stock levels
-	    	$order->reduce_order_stock();
-		} else {
-			$order->update_status('processing');
-		}
+		// if ($hasDownloadableItems) {
+  //       	$order->update_status('completed');
+	 //        // Reduce stock levels
+	 //    	$order->reduce_order_stock();
+		// } else {
+		// 	$order->update_status('processing');
+		// }
+
+
+		$order->update_status('completed');
+	    // Reduce stock levels
+	   	$order->reduce_order_stock();
+
 
 
 
