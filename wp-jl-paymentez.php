@@ -67,16 +67,29 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
 		/**		
 		send transaction paymentez code to email
 		**/
-		function jl_woocommerce_custom_email_order_meta_fields($order, $sent_to_admin, $plain_text) {
+		function jl_woocommerce_custom_email_order_meta_fields($array, $sent_to_admin, $order) {
+
 			if($order->get_payment_method() == 'jl_paymentez') {
-	    	$paymentez = new JL_Paymentez();
-	    ?>
-				<p><b><?php echo $paymentez->translate("code") ?></b>: <?php echo get_post_meta( $order->get_order_number(), '_'.$paymentez->get_id().'_transaction_id', true ) ?></p>
-				<p><b><?php echo $paymentez->translate("authorization_code") ?></b>: <?php echo get_post_meta( $order->get_order_number(), '_'.$paymentez->get_id().'_authorization_code', true ) ?></p>
-		<?php 
+
+		    	$paymentez = new JL_Paymentez();
+
+		    	$array['code'] =  [
+		    		'label' => $paymentez->translate("code"),
+		    		// 'value' => get_post_meta( $order->get_order_number(), '_'.$paymentez->get_id().'_transaction_id', true )
+		    		'value' => 1234
+		    	];
+
+		    	$array['authorization_code'] = [
+		    		'label' => $paymentez->translate("authorization_code"),
+		    		// 'value' => get_post_meta( $order->get_order_number(), '_'.$paymentez->get_id().'_authorization_code', true )
+		    		'value' => 1234
+		    	];
+
+		    	return $array;
+	    
 			}
 		}
-		add_filter('woocommerce_email_order_meta_fields','jl_woocommerce_custom_email_order_meta_fields');
+		add_filter('woocommerce_email_order_meta_fields','jl_woocommerce_custom_email_order_meta_fields',10,3);
 
 		
 		
