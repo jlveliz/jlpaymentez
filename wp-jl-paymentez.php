@@ -415,7 +415,6 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
 		    				background: #dc3545
 						}
 					</style>
-					<script src='https://code.jquery.com/jquery-1.11.3.min.js' type='text/javascript'></script>
 					<link href='https://cdn.paymentez.com/js/1.0.1/paymentez.min.css' rel='stylesheet' type='text/css' />
 					<script src='https://cdn.paymentez.com/checkout/1.0.1/paymentez-checkout.min.js'></script>
 					<button class='js-paymentez-checkout' id='pay-with-paymentez' style='display:none'>$textBtn</button>
