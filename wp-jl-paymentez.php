@@ -492,10 +492,11 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
 				            window.addEventListener('popstate', function() {
 				              paymentezCheckout.close();
 				            });
-
-				            $(document).ready(function(){
-				            	$('#pay-with-paymentez').click();
-				            })
+							
+							(function() {
+								//$('#pay-with-paymentez').click();
+								document.getElementById('pay-with-paymentez').click();
+							})()
 					</script>";
 			}
 
