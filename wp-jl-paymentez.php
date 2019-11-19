@@ -317,6 +317,22 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
 				       		'default' => 'Your Paymentez Client App Key',
 				       		'desc_tip'    => true,
 				       ],
+					  
+					   'paymentez_server_app_code' => [
+				       		'title' => __('Paymentez Server App Code','jl-paymentez'),
+				       		'type' => 'text',
+				       		'description' => 'Provided by Paymentez',
+				       		'default' => 'Used For Refund',
+				       		'desc_tip'    => true,
+				       ],
+					  
+					   'paymentez_server_app_key' => [
+				       		'title' => __('Paymentez Server App Key','jl-paymentez'),
+				       		'type' => 'text',
+				       		'description' => 'Provided by Paymentez',
+				       		'default' => 'Used For Refund',
+				       		'desc_tip'    => true,
+				       ],
 
 				       'language' => [
 				       		'title' => 'Language',
@@ -470,6 +486,7 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
 						        $('#pay-with-paymentez').css('display','block');
 						      },
 						      onResponse: function(response) {
+								announceTransaction(response);
 						      	if(response.error) {
 						      		$('#message-response').addClass('paymentez-error').text(response.error.description)
 						      	} else if(response.transaction)  {
@@ -485,11 +502,23 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
 						      	}
 						      }
 						  })
-						      var btnOpenCheckout = document.querySelector('.js-paymentez-checkout');
+							
+						  	function announceTransaction(response){
+								fetch('" . plugin_dir_url(__FILE__) ."includes/callback.php', {
+									method: 'POST',
+									body: JSON.stringify(response)
+								}).then(function(response) {
+									console.log(response);
+								}).catch(function(myJson) {
+									console.log(myJson);
+								});
+							}
+						 
+						 	 var btnOpenCheckout = document.querySelector('.js-paymentez-checkout');
 						        btnOpenCheckout.addEventListener('click', function(){
 						          // Open Checkout with further options:
 						          paymentezCheckout.open(paramOpen);
-						      })
+						     })
 
 				            // Close Checkout on page navigation:
 				            window.addEventListener('popstate', function() {
@@ -542,13 +571,14 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
 			}
 
 
-			private function generate_token() {
-				$appCode = "GOBE-EC-SERVER"; //$this->get_client_app_code();  
-				$appKey =  "J4qCXk19FWCnoyrdMihGFKl66bxhw7"; //$this->get_client_app_key(); 
-				$unix_timestamp = time();
-				$uniq_token_string = $appKey.(string)($unix_timestamp);
-				$uniq_token_hash = hash("sha256", $uniq_token_string);
-				$auth_token = base64_encode($appCode.';'.(string)$unix_timestamp.';'.$uniq_token_hash);
+			private function generate_token_refund() {
+				$appCode = $this->get_option('paymentez_server_app_code'); //"GOBE-EC-SERVER"; //$this->get_client_app_code();  
+				$appKey = $this->get_option('paymentez_server_app_key'); //"J4qCXk19FWCnoyrdMihGFKl66bxhw7"; //$this->get_client_app_key(); 
+				$fecha_actual = time();
+				$variableTimestamp = (string)($fecha_actual);
+				$uniq_token_string = $appKey . $variableTimestamp;
+				$uniq_token_hash = hash('sha256', $uniq_token_string);
+				$auth_token = base64_encode($appCode . ';' . $variableTimestamp . ';' . $uniq_token_hash);
 				return $auth_token;
 			}
 
@@ -578,17 +608,18 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
 				curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
 				curl_setopt($ch, CURLOPT_HTTPHEADER, [
 					"Content-Type:application/json",
-					"Auth-Token:".$this->generate_token()
+					"Auth-Token:".$this->generate_token_refund()
 				]);
 				
 				$payload = json_encode($data);
+				
 				curl_setopt($ch, CURLOPT_POSTFIELDS,$payload);
 				curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 				$response = curl_exec($ch);
 				
 				$response = json_decode($response,true);
 				
-
+					
 				//if completed ;)
 				if (array_key_exists('status', $response) && $response['status'] == 'success') {
 					if ($reason) {
