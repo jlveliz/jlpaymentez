@@ -199,6 +199,9 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
 
 				add_action( 'woocommerce_receipt_'.$this->id, array(&$this, 'receipt_page') );
 
+				//add jquery
+				// wp_enqueue_script( 'jquery');
+
 
 				if ($this->enabled == 'yes') {
 
@@ -384,7 +387,7 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
 				$textBtn = $lang == 'en' ? "Pay" : 'Pagar';
 				$successMessage =  $this->translate('success');
 				$location = plugins_url('/includes/success.php?order_id='.$order_id, __FILE__);
-				$inEquador = $this->ecuadorian_app == 'yes' ? true : false;
+				$inEquador = $this->ecuadorian_app == 'yes' ? 1 : 0;
 				$tax_percentage = $this->iva_percentage;
 				$order_taxable_amount = number_format(($total / ("1.".$tax_percentage)),2,'.','');
 				$order_vat =  number_format(($total - $order_taxable_amount),2,'.','');
@@ -416,6 +419,7 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
 						}
 					</style>
 					<link href='https://cdn.paymentez.com/js/1.0.1/paymentez.min.css' rel='stylesheet' type='text/css' />
+					<script src='https://code.jquery.com/jquery-1.12.4.min.js' crossorigin='anonymous'></script>
 					<script src='https://cdn.paymentez.com/checkout/1.0.1/paymentez-checkout.min.js'></script>
 					<button class='js-paymentez-checkout' id='pay-with-paymentez' style='display:none'>$textBtn</button>
 					<p id='message-response'></p>
@@ -430,7 +434,6 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
 							order_reference: '#$order_id',
 							order_vat : $order_vat,
 						};
-
 
 						if($inEquador) {
 							paramOpen.order_tax_percentage = $tax_percentage;
