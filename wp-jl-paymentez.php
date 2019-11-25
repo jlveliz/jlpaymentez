@@ -546,8 +546,9 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
 
 			public function translate($key)
 			{
+				
 				$messages = [
-					'eng' => [
+					'en' => [
 						'success' => 'Pay completed Successfull',
 						'refund' => 'Your payment has been successfully reversed',
 						'code' => 'Paymentez Code',
