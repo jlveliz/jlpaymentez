@@ -75,14 +75,13 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
 
 		    	$array['code'] =  [
 		    		'label' => $paymentez->translate("code"),
-		    		// 'value' => get_post_meta( $order->get_order_number(), '_'.$paymentez->get_id().'_transaction_id', true )
-		    		'value' => 1234
+		    		'value' => get_post_meta( $order->get_order_number(), '_'.$paymentez->get_id().'_transaction_id', true )
 		    	];
 
 		    	$array['authorization_code'] = [
 		    		'label' => $paymentez->translate("authorization_code"),
-		    		// 'value' => get_post_meta( $order->get_order_number(), '_'.$paymentez->get_id().'_authorization_code', true )
-		    		'value' => 1234
+		    		'value' => get_post_meta( $order->get_order_number(), '_'.$paymentez->get_id().'_authorization_code', true )
+		    		
 		    	];
 
 		    	return $array;
